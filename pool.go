@@ -1,4 +1,4 @@
-package goroutine_pool
+package gpool
 
 import (
 	"fmt"
