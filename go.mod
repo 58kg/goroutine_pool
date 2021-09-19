@@ -1,4 +1,4 @@
-module github.com/58kg/goroutine_pool
+module github.com/58kg/gpool
 
 go 1.16
 
