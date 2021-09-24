@@ -2,11 +2,36 @@ package gpool
 
 import (
 	"fmt"
+	"os"
+	"runtime/debug"
 	"sync"
 	"sync/atomic"
 	"time"
 	"unsafe"
 )
+
+func NewDefaultPool(maxTaskWorkerCount int) *Pool {
+	if maxTaskWorkerCount < MinTaskWorkerCount {
+		maxTaskWorkerCount = MinTaskWorkerCount
+	}
+
+	if maxTaskWorkerCount > MaxTaskWorkerCount {
+		maxTaskWorkerCount = MaxTaskWorkerCount
+	}
+
+	ret, err := NewPool(Config{
+		MaxTaskWorkerCount: MaxTaskWorkerCount,
+		KeepaliveTime:      time.Second * 10,
+		HandleTaskPanic: func(err interface{}) {
+			_, _ = fmt.Fprintf(os.Stderr, "task panic, err:%s, stack:\n%s", err, debug.Stack())
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return ret
+}
 
 func NewPool(c Config) (*Pool, error) {
 	if err := checkConfig(c); err != nil {
