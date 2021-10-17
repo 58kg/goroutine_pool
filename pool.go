@@ -20,7 +20,7 @@ func NewDefaultPool(maxTaskWorkerCount int) *Pool {
 	}
 
 	ret, err := NewPool(Config{
-		MaxTaskWorkerCount: MaxTaskWorkerCount,
+		MaxTaskWorkerCount: uint32(maxTaskWorkerCount),
 		KeepaliveTime:      time.Second * 10,
 		HandleTaskPanic: func(err interface{}) {
 			_, _ = fmt.Fprintf(os.Stderr, "task panic, err:%s, stack:\n%s", err, debug.Stack())
